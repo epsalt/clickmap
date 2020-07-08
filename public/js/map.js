@@ -1,6 +1,8 @@
-L = require("leaflet");
+const L = require("leaflet");
+const proj4 = require("proj4");
 
 const map = L.map("mapid").setView([51.05, -114.066], 13);
+const utm = proj4("EPSG:3857");
 
 L.tileLayer(
   "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZXBzYWx0IiwiYSI6ImNrY2NybjNxYzAxeTgyeXRrdTltZHRlN2gifQ.KZEPNfporcfasqLBqRG94w",
@@ -39,7 +41,7 @@ const clickHandler = (e, json) => {
   let data = {
     session: json.id,
     timestamp: Date.now(),
-    coords: [coords.lat, coords.lng],
+    coords: [coords.lng, coords.lat],
   };
 
   fetch("/api/coords/", {
@@ -54,13 +56,16 @@ const clickHandler = (e, json) => {
   marker.bindPopup(label).openPopup();
 };
 
+const coordsString = (coords) => coords.map((s) => s.toFixed(3)).join(", ");
+
 const formatLabel = ({ session, timestamp, coords }) => {
   let dateString = new Date(timestamp).toString();
-  let coordString = coords.map((s) => s.toFixed(3)).toString();
+  let utmCoords = proj4(utm, coords);
 
   return `
 <b>Added By:</b> ${session}<br>
 <b>Added On:</b> ${dateString}<br>
-<b>Coordinates:</b> ${coordString}
+<b>Long/Lat:</b> ${coordsString(coords)}<br>
+<b>Web Mercator:</b> ${coordsString(utmCoords)}
 `.trim();
 };

@@ -35,8 +35,8 @@ app.post("/api/coords/", (req, res) => {
   var data = {
     session: req.body.session,
     timestamp: req.body.timestamp,
-    lat: req.body.coords[0],
-    lng: req.body.coords[1],
+    lat: req.body.coords[1],
+    lng: req.body.coords[0],
   };
   var params = [data.session, data.timestamp, data.lat, data.lng];
 
