@@ -1,4 +1,3 @@
-const session = "12345";
 const map = L.map("mapid").setView([51.05, -114.066], 13);
 
 L.tileLayer(
@@ -18,7 +17,7 @@ fetch("/api/coords/")
   .then((json) =>
     L.geoJSON(json.data, {
       onEachFeature: (feature, layer) => {
-        var label = formatLabel({
+        let label = formatLabel({
           session: feature.properties.session,
           timestamp: feature.properties.timestamp,
           coords: feature.geometry.coordinates,
@@ -28,11 +27,15 @@ fetch("/api/coords/")
     }).addTo(map)
   );
 
-map.on("click", (e) => {
-  var marker = new L.marker(e.latlng).addTo(map);
-  var coords = marker.getLatLng();
-  var data = {
-    session: session,
+fetch("/api/id")
+  .then((response) => response.json())
+  .then((json) => map.on("click", (e) => clickHandler(e, json)));
+
+const clickHandler = (e, json) => {
+  let marker = new L.marker(e.latlng).addTo(map);
+  let coords = marker.getLatLng();
+  let data = {
+    session: json.id,
     timestamp: Date.now(),
     coords: [coords.lat, coords.lng],
   };
@@ -45,13 +48,13 @@ map.on("click", (e) => {
     },
   });
 
-  var label = formatLabel(data);
+  let label = formatLabel(data);
   marker.bindPopup(label).openPopup();
-});
+};
 
 const formatLabel = ({ session, timestamp, coords }) => {
-  var dateString = new Date(timestamp).toString();
-  var coordString = coords.map((s) => s.toFixed(3)).toString();
+  let dateString = new Date(timestamp).toString();
+  let coordString = coords.map((s) => s.toFixed(3)).toString();
 
   return `
 <b>Added By:</b> ${session}<br>
