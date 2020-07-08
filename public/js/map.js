@@ -1,3 +1,5 @@
+L = require("leaflet");
+
 const map = L.map("mapid").setView([51.05, -114.066], 13);
 
 L.tileLayer(
