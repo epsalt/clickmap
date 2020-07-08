@@ -7,7 +7,8 @@ function javascriptBuild() {
   return browserify({
     entries: ["public/js/map.js"],
     transform: [
-      babelify.configure({ presets: ["@babel/preset-env"] })],
+      babelify.configure({ presets: ["@babel/preset-env"] }),
+    ],
   })
     .bundle()
     .pipe(source("bundle.js"))

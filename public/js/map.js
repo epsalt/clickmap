@@ -33,7 +33,18 @@ fetch("/api/coords/")
 
 fetch("/api/id")
   .then((response) => response.json())
-  .then((json) => map.on("click", (e) => clickHandler(e, json)));
+  .then((json) => {
+    map.on("click", (e) => clickHandler(e, json));
+    L.popup()
+      .setLatLng(map.getCenter())
+      .setContent(
+        `
+Hey! Welcome to Clickmap!<br>
+Your session ID is <b>${json.id}</b><br>
+Close me and do some clicking.`
+      )
+      .openOn(map);
+  });
 
 const clickHandler = (e, json) => {
   let marker = new L.marker(e.latlng).addTo(map);
