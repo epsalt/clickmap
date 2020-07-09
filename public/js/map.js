@@ -67,7 +67,11 @@ const clickHandler = (e, json) => {
   marker.bindPopup(label).openPopup();
 };
 
-const coordsString = (coords) => coords.map((s) => s.toFixed(3)).join(", ");
+const coordsString = (coords) =>
+  coords
+    .map((s) => s.toFixed(3))
+    .reverse()
+    .join(", ");
 
 const formatLabel = ({ session, timestamp, coords }) => {
   let dateString = new Date(timestamp).toString();
@@ -76,7 +80,7 @@ const formatLabel = ({ session, timestamp, coords }) => {
   return `
 <b>Added By:</b> ${session}<br>
 <b>Added On:</b> ${dateString}<br>
-<b>Long/Lat:</b> ${coordsString(coords)}<br>
+<b>Lat/Long:</b> ${coordsString(coords)}<br>
 <b>Web Mercator:</b> ${coordsString(utmCoords)}
 `.trim();
 };
