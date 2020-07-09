@@ -36,6 +36,7 @@ http://localhost:3000/
 
 ## TODO
 - Tests
-- Style points from current session
+- Bundle CSS
 - Point deletion
-- Realtime point updating
+- Style points from current session
+- Check for session ID db collisions
