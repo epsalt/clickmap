@@ -17,7 +17,7 @@ let db = new sqlite3.Database(dbname, (err) => {
     throw err;
   } else {
     db.run(
-      `CREATE TABLE map (
+      `CREATE TABLE IF NOT EXISTS map (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             session text,
             timestamp integer,
@@ -26,7 +26,7 @@ let db = new sqlite3.Database(dbname, (err) => {
             )`,
       (err) => {
         if (err) {
-          console.log(err.message);
+          console.error(err.message);
         }
       }
     );
