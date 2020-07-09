@@ -2,11 +2,11 @@
   "name": "clickmap",
   "version": "1.0.0",
   "description": "A map that you and your friends can click on.",
-  "main": "src/server.js",
+  "main": "app.js",
   "scripts": {
     "build": "gulp build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/server.js"
+    "start": "node app.js"
   },
   "author": "evan.saltman@gmail.com",
   "license": "ISC",
