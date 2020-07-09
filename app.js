@@ -1,7 +1,6 @@
 const express = require("express");
 const geojson = require("geojson");
 const sqlite3 = require("sqlite3").verbose();
-const hri = require("human-readable-ids").hri;
 const path = require("path");
 
 const app = express();
@@ -49,10 +48,6 @@ app.get("/api/coords/", (req, res) => {
     });
   });
 });
-
-app.get("/api/id", (req, res) =>
-  res.json({ message: "success", id: hri.random() })
-);
 
 app.post("/api/coords/", (req, res) => {
   let sql = "INSERT INTO map (session, timestamp, lat, lng) VALUES (?,?,?,?)";

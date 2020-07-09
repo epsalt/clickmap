@@ -1,14 +1,18 @@
 const L = require("leaflet");
 const proj4 = require("proj4");
+const hri = require("human-readable-ids").hri;
 
 const map = L.map("mapid").setView([51.05, -114.066], 13);
 const utm = proj4("EPSG:3857");
+const session = hri.random();
 const attrib =
   'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
 
+// Basemap
 L.tileLayer(
   "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZXBzYWx0IiwiYSI6ImNrY2NybjNxYzAxeTgyeXRrdTltZHRlN2gifQ.KZEPNfporcfasqLBqRG94w",
   {
+    attribution: `Session ID: ${session}, ${attrib}`,
     maxZoom: 18,
     id: "mapbox/streets-v11",
     tileSize: 512,
@@ -16,6 +20,21 @@ L.tileLayer(
   }
 ).addTo(map);
 
+// Add point on click
+map.on("click", (e) => clickHandler(e, session));
+
+// Intro popup
+L.popup()
+  .setLatLng(map.getCenter())
+  .setContent(
+    `
+Hey! Welcome to Clickmap!<br>
+Your session ID is <b>${session}</b><br>
+Close me and do some clicking.`
+  )
+  .openOn(map);
+
+// Populate clicks from db
 fetch("/api/coords/")
   .then((response) => response.json())
   .then((json) =>
@@ -31,27 +50,11 @@ fetch("/api/coords/")
     }).addTo(map)
   );
 
-fetch("/api/id")
-  .then((response) => response.json())
-  .then((json) => {
-    map.on("click", (e) => clickHandler(e, json));
-    L.popup()
-      .setLatLng(map.getCenter())
-      .setContent(
-        `
-Hey! Welcome to Clickmap!<br>
-Your session ID is <b>${json.id}</b><br>
-Close me and do some clicking.`
-      )
-      .openOn(map);
-    map.attributionControl.addAttribution(`Session ID: ${json.id}, ${attrib}`);
-  });
-
-const clickHandler = (e, json) => {
+const clickHandler = (e, session) => {
   let marker = new L.marker(e.latlng).addTo(map);
   let coords = marker.getLatLng();
   let data = {
-    session: json.id,
+    session: session,
     timestamp: Date.now(),
     coords: [coords.lng, coords.lat],
   };
