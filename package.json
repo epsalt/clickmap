@@ -17,7 +17,7 @@
     "human-readable-ids": "^1.0.4",
     "leaflet": "^1.6.0",
     "proj4": "^2.6.2",
-    "sqlite3": "^5.0.0"
+    "sqlite3": "^5.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.10.4",
